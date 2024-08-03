@@ -9088,12 +9088,6 @@ button:focus-visible {
   border: none;
 }
 
-.btn-group:disabled, .btn-group.disabled,
-.btn-group-vertical:disabled,
-.btn-group-vertical.disabled {
-  opacity: 0.45;
-}
-
 .dropdown-toggle-split,
 .btn-lg + .dropdown-toggle-split,
 .btn-group-lg > .btn + .dropdown-toggle-split,
@@ -11250,9 +11244,6 @@ div:not(.nav-align-left):not(.nav-align-right) > .nav-tabs {
 }
 .input-group-merge .input-group-text:last-child {
   border-left: 0;
-}
-.input-group-merge.disabled > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
-  margin-left: 0 !important;
 }
 .input-group-merge > .form-control:not(:first-child) {
   padding-left: 0 !important;
@@ -24729,7 +24720,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
 .menu-collapsed:not(:hover):not(.layout-menu-hover) .menu-inner > .menu-item > .menu-link,
 .menu-collapsed:not(:hover):not(.layout-menu-hover) .menu-inner > .menu-block,
 .menu-collapsed:not(:hover):not(.layout-menu-hover) .menu-inner > .menu-header {
-  padding-left: 0.75rem;
+  padding-left: 0.76rem;
 }
 .menu-collapsed:not(:hover) .menu-inner > .menu-header,
 .menu-collapsed:not(:hover) .menu-block {
@@ -25486,7 +25477,7 @@ html:not(.layout-menu-fixed) .menu-inner-shadow {
   .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu.menu-vertical:not(.layout-menu-hover) .menu-inner > .menu-item > .menu-link,
   .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu.menu-vertical:not(.layout-menu-hover) .menu-inner > .menu-block,
   .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu.menu-vertical:not(.layout-menu-hover) .menu-inner > .menu-header {
-    padding-left: 0.75rem;
+    padding-left: 0.76rem;
   }
   .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .menu-vertical .menu-inner > .menu-header,
   .layout-menu-collapsed:not(.layout-menu-hover):not(.layout-menu-offcanvas):not(.layout-menu-fixed-offcanvas) .layout-menu .menu-vertical .menu-block,

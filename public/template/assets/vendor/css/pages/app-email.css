@@ -66,8 +66,6 @@
 }
 .app-email .app-email-compose .email-compose-to .select2-selection {
   border: none;
-  padding: 0.5rem 1rem !important;
-  min-height: 3rem;
 }
 .app-email .app-email-compose .email-compose-to .select2-selection .select2-selection__choice {
   padding-top: 0.2rem;
@@ -127,35 +125,31 @@
     height: calc(100vh - 15rem - 7rem);
   }
 }
-.app-email .app-emails-list .email-list li.email-list-item {
-  padding: 0.6rem 1rem;
-  min-height: 3.75rem;
-  transition: all 0.2s ease-in-out;
+.app-email .app-emails-list .email-list li {
+  padding: 1rem 1rem;
+  transition: all 0.15s ease-in-out;
   cursor: pointer;
   z-index: 1;
 }
-.app-email .app-emails-list .email-list li.email-list-item .email-list-item-subject {
+.app-email .app-emails-list .email-list li .email-list-item-subject {
   font-size: 0.8125rem;
 }
-.app-email .app-emails-list .email-list li.email-list-item .email-list-item-username {
+.app-email .app-emails-list .email-list li .email-list-item-username {
   font-weight: 500;
 }
-.app-email .app-emails-list .email-list li.email-list-item .email-list-item-time {
+.app-email .app-emails-list .email-list li .email-list-item-time {
   width: 64px;
   display: inline-block;
   text-align: right;
 }
-.app-email .app-emails-list .email-list li.email-list-item .email-list-item-meta .email-list-item-actions {
+.app-email .app-emails-list .email-list li .email-list-item-meta .email-list-item-actions {
   display: none;
 }
-.app-email .app-emails-list .email-list li.email-list-item .email-list-item-meta .email-list-item-actions li {
+.app-email .app-emails-list .email-list li .email-list-item-meta .email-list-item-actions li {
   padding: 0;
   margin-right: 0 !important;
 }
-.app-email .app-emails-list .email-list li.email-list-item .list-inline-item:not(:last-child) {
-  margin-inline-end: 0.25rem;
-}
-.app-email .app-emails-list .email-list li.email-list-item.email-list-item:not(.list-inline-item):hover {
+.app-email .app-emails-list .email-list li.email-list-item:not(.list-inline-item):hover {
   z-index: 5;
   transform: translateY(-2px);
 }
@@ -256,12 +250,12 @@
     position: static;
     height: auto;
   }
-  .app-email .email-list li.email-list-item:hover .email-list-item-meta .email-list-item-attachment,
-  .app-email .email-list li.email-list-item:hover .email-list-item-meta .email-list-item-time,
-  .app-email .email-list li.email-list-item:hover .email-list-item-meta .email-list-item-label {
+  .app-email .email-list li:hover .email-list-item-meta .email-list-item-attachment,
+  .app-email .email-list li:hover .email-list-item-meta .email-list-item-time,
+  .app-email .email-list li:hover .email-list-item-meta .email-list-item-label {
     display: none !important;
   }
-  .app-email .email-list li.email-list-item:hover .email-list-item-meta .email-list-item-actions {
+  .app-email .email-list li:hover .email-list-item-meta .email-list-item-actions {
     display: block;
     text-wrap: nowrap;
   }
@@ -273,13 +267,13 @@
   .app-email .app-emails-list .emails-list-header {
     padding: 1rem;
   }
-  .app-email .app-emails-list .email-list li.email-list-item {
+  .app-email .app-emails-list .email-list li {
     padding: 1rem;
   }
-  .app-email .app-emails-list .email-list li.email-list-item .email-list-item-username {
+  .app-email .app-emails-list .email-list li .email-list-item-username {
     font-size: 0.85rem;
   }
-  .app-email .app-emails-list .email-list li.email-list-item .email-list-item-user {
+  .app-email .app-emails-list .email-list li .email-list-item-user {
     min-width: auto !important;
     margin-right: 1rem;
   }
@@ -422,7 +416,7 @@
   }
 }
 @media (max-width: 576px) {
-  [dir=rtl] .app-emails-list .email-list li.email-list-item .email-list-item-user {
+  [dir=rtl] .app-emails-list .email-list li .email-list-item-user {
     margin-left: 1rem;
   }
 }
