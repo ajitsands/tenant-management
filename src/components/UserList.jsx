@@ -1,369 +1,458 @@
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
+// import DataTable from 'react-data-table-component';
+// import { FaEdit, FaTrash } from 'react-icons/fa';
 
-// const UserList = () => {
-//   const [users, setUsers] = useState([]);
+// const UserList = ({ reload }) => {
+//     const [users, setUsers] = useState([]);
+//     const [search, setSearch] = useState('');
+//     const [filteredData, setFilteredData] = useState([]);
 
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:5000/api/user');
-//         setUsers(response.data);
-//       } catch (error) {
-//         console.error('There was an error fetching the user data!', error);
-//       }
+    
+//     const fetchData = async () => {
+//         try {
+//             const response = await axios.get('http://localhost:5000/api/user');
+//             setUsers(response.data);
+//             setFilteredData(response.data); 
+//         } catch (error) {
+//             console.error('Error fetching data:', error);
+//         }
 //     };
 
-//     fetchUsers();
-//   }, []);
+   
+//     useEffect(() => {
+//         fetchData();
+//     }, [reload]);
 
-//   return (
-//     <div className="card mb-6">
-//       <div className="card-body">
-//         <h6>User List</h6>
-//         <table className="table">
-//           <thead>
-//             <tr>
-//               <th>Name</th>
-//               <th>Email</th>
-//               <th>Contact Number</th>
-//               <th>User Type</th>
-//               <th>User Name</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {users.map((user) => (
-//               <tr key={user.ids}>
-//                 <td>{user.names}</td>
-//                 <td>{user.email}</td>
-//                 <td>{user.contact_no}</td>
-//                 <td>{user.user_type}</td>
-//                 <td>{user.user_name}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-//     </div>
-//   );
+   
+//     useEffect(() => {
+//         const filtered = users.filter(item =>
+//             item.names.toLowerCase().includes(search.toLowerCase())
+//         );
+//         setFilteredData(filtered);
+//     }, [search, users]);
+
+   
+//     const columns = [
+//         { name: 'ID', selector: row => row.ids, sortable: true },
+//         { name: 'Name', selector: row => row.names, sortable: true },
+//         { name: 'User Name', selector: row => row.user_name, sortable: true },
+//         { name: 'User Type', selector: row => row.user_type, sortable: true },
+//         { name: 'Email', selector: row => row.email, sortable: true },
+//         { name: 'Contact No', selector: row => row.contact_no, sortable: true },
+//         {
+//           name: 'Actions',
+//           cell: (row) => (
+//               <div>
+//                   <FaEdit onClick={() => handleEdit(row)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+//                   {/* <FaTrash onClick={() => handleDelete(row)} style={{ cursor: 'pointer' }} /> */}
+//               </div>
+//           ),
+//           ignoreRowClick: true,
+//           allowOverflow: true,
+//           button: true,
+//       },
+//     ];
+
+   
+//     const customStylesOfTheTable = {
+//         header: {
+//             style: {
+//                 minHeight: '56px',
+//                 backgroundColor: '#f5f5f5',
+//             },
+//         },
+//         headRow: {
+//             style: {
+//                 backgroundColor: '#e9ecef',
+//             },
+//         },
+//         rows: {
+//             style: {
+//                 minHeight: '50px',
+//             },
+//             stripedStyle: {
+//                 backgroundColor: '#f2f2f2',
+//             },
+//         },
+//         cells: {
+//             style: {
+//                 paddingLeft: '8px',
+//                 paddingRight: '8px',
+//             },
+//         },
+//     };
+
+//     return (
+//         <div className="card">
+//             <div className="row">
+//                 <div className="col-md-9">
+//                     <h5 className="card-header text-md-start text-center">User List</h5>
+//                 </div>
+//                 <div className="col-md-3 pt-5" style={{ padding: '10px' }}>
+//                     <input
+//                         type="text"
+//                         placeholder="Search..."
+//                         value={search}
+//                         onChange={(e) => setSearch(e.target.value)}
+//                         style={{ marginBottom: '30px', padding: '10px', width: '90%' }}
+//                     />
+//                 </div>
+//             </div>
+//             <DataTable
+//                 columns={columns}
+//                 data={filteredData} 
+//                 customStyles={customStylesOfTheTable}
+//                 pagination
+//                 highlightOnHover
+//                 striped
+//             />
+//         </div>
+//     );
 // };
-
 
 // export default UserList;
 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import DataTable from 'react-data-table-component';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2'
+
+const UserList = ({ reload, onEdit, onDelete }) => {
+    const [users, setUsers] = useState([]);
+    const [search, setSearch] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+
+    // Fetch data from the server
+    const fetchData = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/user');
+            setUsers(response.data);
+            setFilteredData(response.data); // Set filteredData initially to all users
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    // Fetch data when the component mounts or reload prop changes
+    useEffect(() => {
+        fetchData();
+    }, [reload]);
+
+    // Filter data based on search input
+    useEffect(() => {
+        const filtered = users.filter(item =>
+            item.names.toLowerCase().includes(search.toLowerCase())
+        );
+        setFilteredData(filtered);
+    }, [search, users]);
+
+    const handleEdit = (row) => {
+        onEdit(row);
+    };
+
+    // const handleDelete = (row) => {
+    //     onDelete(row);
+    // };
+    const handleDelete = async (id) => {
+        // Show confirmation dialog
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+    
+        if (result.isConfirmed) {
+            try {
+                // Perform the delete request
+                await axios.delete(`http://localhost:5000/api/user/${id}`);
+                fetchData();
+                
+                // Show success message
+                Swal.fire(
+                    'Deleted!',
+                    'The item has been deleted.',
+                    'success'
+                );
+            } catch (error) {
+                console.error('Failed to delete row:', error);
+                Swal.fire(
+                    'Error!',
+                    'There was an error deleting the item.',
+                    'error'
+                );
+            }
+        } else {
+            Swal.fire(
+                'Cancelled',
+                'The item was not deleted.',
+                'info'
+            );
+        }
+    };
+    
+
+    
+    const columns = [
+        {
+            name: 'S.No',
+            selector: (row, index) => index + 1,
+            sortable: false,
+            width: '60px',
+            center:true,
+        },
+        { name: 'Name', selector: row => row.names, sortable: true,justify:true},
+        { name: 'User Name', selector: row => row.user_name, sortable: true,justify:true },
+        { name: 'User Type', selector: row => row.user_type, sortable: true,justify:true },
+        { name: 'Email', selector: row => row.email, sortable: true,justify:true },
+        { name: 'Contact No', selector: row => row.contact_no, sortable: true,justify:true },
+        {
+          name: 'Actions',
+          cell: (row) => (
+              <div>
+                  <FaEdit onClick={() => handleEdit(row)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+                  <FaTrash onClick={() => handleDelete(row.ids)} style={{ cursor: 'pointer' }} />
+              </div>
+          ),
+          ignoreRowClick: true,
+          allowOverflow: true,
+          button: true,
+      },
+    ];
+
+    // Custom styles for the DataTable
+    const customStylesOfTheTable = {
+        header: {
+            style: {
+                minHeight: '56px',
+                backgroundColor: '#f5f5f5',
+            },
+        },
+        headRow: {
+            style: {
+                backgroundColor: '#e9ecef',
+            },
+        },
+        rows: {
+            style: {
+                minHeight: '50px',
+            },
+            stripedStyle: {
+                backgroundColor: '#f2f2f2',
+            },
+        },
+        cells: {
+            style: {
+                paddingLeft: '8px',
+                paddingRight: '8px',
+            },
+        },
+    };
+
+    return (
+        <div className="card">
+            <div className="row">
+                <div className="col-md-9">
+                    <h5 className="card-header text-md-start text-center">User List</h5>
+                </div>
+                <div className="col-md-3 pt-5" style={{ padding: '10px' }}>
+                    <input
+                        type="text"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{ marginBottom: '30px', padding: '10px', width: '90%' }}
+                    />
+                </div>
+            </div>
+            <DataTable
+                columns={columns}
+                data={filteredData} // Use filteredData instead of data
+                customStyles={customStylesOfTheTable}
+                pagination
+                highlightOnHover
+                striped
+            />
+        </div>
+    );
+};
+
+export default UserList;
 
 // import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 // import DataTable from 'react-data-table-component';
+// import { FaEdit, FaTrash } from 'react-icons/fa';
+// import Swal from 'sweetalert2';
 
-// function UserDatatable() {
-//   const [users, setUsers] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [search, setSearch] = useState('');
-//   const [filteredData, setFilteredData] = useState([]);
+// const UserList = ({ reload, onEdit, onDelete }) => {
+//     const [users, setUsers] = useState([]);
+//     const [search, setSearch] = useState('');
+//     const [filteredData, setFilteredData] = useState([]);
+//     const [selectedRowId, setSelectedRowId] = useState(null);
 
-//   useEffect(() => {
-//     axios.get('http://localhost:5000/api/user')
-//       .then(response => {
-//         setUsers(response.data);
-//         setFilteredData(response.data); // Initialize filteredData with the response data
-//         setLoading(false);
-//       })
-//       .catch(error => {
-//         console.log(error.response);
-//         setLoading(false);
-//       });
-//   }, []);
+//     // Fetch data from the server
+//     const fetchData = async () => {
+//         try {
+//             const response = await axios.get('http://localhost:5000/api/user');
+//             setUsers(response.data);
+//             setFilteredData(response.data); // Set filteredData initially to all users
+//         } catch (error) {
+//             console.error('Error fetching data:', error);
+//         }
+//     };
 
-//   useEffect(() => {
-//     const filtered = users.filter(user =>
-//       user.names.toLowerCase().includes(search.toLowerCase())
+//     // Fetch data when the component mounts or reload prop changes
+//     useEffect(() => {
+//         fetchData();
+//     }, [reload]);
+
+//     // Filter data based on search input
+//     useEffect(() => {
+//         const filtered = users.filter(item =>
+//             item.names.toLowerCase().includes(search.toLowerCase())
+//         );
+//         setFilteredData(filtered);
+//     }, [search, users]);
+
+//     // Handle edit action
+//     const handleEdit = (row) => {
+//         setSelectedRowId(row.ids); // Set the row ID to highlight
+//         onEdit(row);
+//     };
+
+//     // Handle delete action with confirmation
+//     const handleDelete = async (id) => {
+//         const result = await Swal.fire({
+//             title: 'Are you sure?',
+//             text: "You won't be able to revert this!",
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonColor: '#3085d6',
+//             cancelButtonColor: '#d33',
+//             confirmButtonText: 'Yes, delete it!',
+//             cancelButtonText: 'Cancel'
+//         });
+
+//         if (result.isConfirmed) {
+//             try {
+//                 await axios.delete(`http://localhost:5000/api/user/${id}`);
+//                 fetchData();
+//                 Swal.fire('Deleted!', 'The item has been deleted.', 'success');
+//             } catch (error) {
+//                 console.error('Failed to delete row:', error);
+//                 Swal.fire('Error!', 'There was an error deleting the item.', 'error');
+//             }
+//         } else {
+//             Swal.fire('Cancelled', 'The item was not deleted.', 'info');
+//         }
+//     };
+
+//     const columns = [
+//         {
+//             name: 'S.No',
+//             selector: (row, index) => index + 1,
+//             sortable: false,
+//             width: '60px',
+//             center: true,
+//         },
+//         { name: 'Name', selector: row => row.names, sortable: true, justify: true },
+//         { name: 'User Name', selector: row => row.user_name, sortable: true, justify: true },
+//         { name: 'User Type', selector: row => row.user_type, sortable: true, justify: true },
+//         { name: 'Email', selector: row => row.email, sortable: true, justify: true },
+//         { name: 'Contact No', selector: row => row.contact_no, sortable: true, justify: true },
+//         {
+//             name: 'Actions',
+//             cell: (row) => (
+//                 <div>
+//                     <FaEdit
+//                         onClick={() => handleEdit(row)}
+//                         style={{ cursor: 'pointer', marginRight: '10px' }}
+//                     />
+//                     <FaTrash
+//                         onClick={() => handleDelete(row.ids)}
+//                         style={{ cursor: 'pointer' }}
+//                     />
+//                 </div>
+//             ),
+//             ignoreRowClick: true,
+//             allowOverflow: true,
+//             button: true,
+//         },
+//     ];
+
+//     // Custom styles for the DataTable
+//     const customStylesOfTheTable = {
+//         header: {
+//             style: {
+//                 minHeight: '56px',
+//                 backgroundColor: '#f5f5f5',
+//             },
+//         },
+//         headRow: {
+//             style: {
+//                 backgroundColor: '#e9ecef',
+//             },
+//         },
+//         rows: {
+//             style: {
+//                 minHeight: '50px',
+//             },
+//             stripedStyle: {
+//                 backgroundColor: '#f2f2f2',
+//             },
+//         },
+//         cells: {
+//             style: {
+//                 paddingLeft: '8px',
+//                 paddingRight: '8px',
+//             },
+//         },
+//     };
+
+//     return (
+//         <div className="card">
+//             <div className="row">
+//                 <div className="col-md-9">
+//                     <h5 className="card-header text-md-start text-center">User List</h5>
+//                 </div>
+//                 <div className="col-md-3 pt-5" style={{ padding: '10px' }}>
+//                     <input
+//                         type="text"
+//                         placeholder="Search..."
+//                         value={search}
+//                         onChange={(e) => setSearch(e.target.value)}
+//                         style={{ marginBottom: '30px', padding: '10px', width: '90%' }}
+//                     />
+//                 </div>
+//             </div>
+//             <DataTable
+//                 columns={columns}
+//                 data={filteredData}
+//                 customStyles={customStylesOfTheTable}
+//                 pagination
+//                 highlightOnHover
+//                 striped
+//                 conditionalRowStyles={[
+//                     {
+//                         when: row => row.ids === selectedRowId,
+//                         style: {
+//                             backgroundColor: 'red',
+//                             color: 'white',
+//                         },
+//                     },
+//                 ]}
+//             />
+//         </div>
 //     );
-//     setFilteredData(filtered);
-//   }, [search, users]);
+// };
 
-//   const columns = [
-//     {
-//       name: 'S.No',
-//       selector: (row, index) => index + 1,
-//       sortable: false,
-//       width: '5%',
-//       center: true,
-//     },
-//     { 
-//       name: 'Name', 
-//       selector: row => row.names, 
-//       sortable: true, 
-//       center: true,
-//       width: '20%',
-//     },
-//     { 
-//       name: 'User Name', 
-//       selector: row => row.user_name, 
-//       sortable: true, 
-//       center: true,
-//       width: '20%',
-//     },
-//     { 
-//       name: 'User Type', 
-//       selector: row => row.user_type, 
-//       sortable: true, 
-//       center: true,
-//       width: '15%',
-//     },
-//     { 
-//       name: 'Email', 
-//       selector: row => row.email, 
-//       sortable: true, 
-//       center: true,
-//       width: '20%',
-//     },
-//     { 
-//       name: 'Contact Number', 
-//       selector: row => row.contact_no, 
-//       sortable: true, 
-//       center: true,
-//       width: '20%',
-//     },
-//   ];
-
-
-//   const customStyles = {
-//     header: {
-//       style: {
-//         minHeight: '56px',
-//         backgroundColor: '#f5f5f5',
-//       },
-//     },
-//     headRow: {
-//       style: {
-//         backgroundColor: '#e9ecef',
-//       },
-//     },
-//     rows: {
-//       style: {
-//         minHeight: '50px',
-//       },
-//       stripedStyle: {
-//         backgroundColor: '#f2f2f2',
-//       },
-//     },
-//     cells: {
-//       style: {
-//         paddingLeft: '8px',
-//         paddingRight: '8px',
-//       },
-//     },
-//   };
-
-//   return (
-//     <div className="card">
-//       <div className="row">
-//         <div className="col-md-9">
-//           <h5 className="card-header text-md-start text-center">User List</h5>
-//         </div>
-//         <div className="col-md-3 pt-5" style={{ padding: '10px' }}>
-//           <input
-//             type="text"
-//             placeholder="Search..."
-//             value={search}
-//             onChange={(e) => setSearch(e.target.value)}
-//             style={{ marginBottom: '30px', padding: '10px', width: '90%' }}
-//           />
-//         </div>
-//       </div>
-//       <div className="card-datatable text-nowrap">
-//         <DataTable
-//           columns={columns}
-//           data={filteredData}
-//           customStyles={customStyles}
-//           progressPending={loading}
-//           pagination
-//           highlightOnHover
-//           striped
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default UserDatatable;
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import DataTable from 'react-data-table-component';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-
-function UserDatatable() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:5000/api/user')
-      .then(response => {
-        setUsers(response.data);
-        setFilteredData(response.data); // Initialize filteredData with the response data
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error.response);
-        setLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    const filtered = users.filter(user =>
-      user.names.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredData(filtered);
-  }, [search, users]);
-
-  const handleEdit = (id) => {
-    // Handle edit logic here
-    console.log(`Edit user with ID: ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    // Handle delete logic here
-    console.log(`Delete user with ID: ${id}`);
-  };
-
-  const columns = [
-    {
-      name: 'S.No',
-      selector: (row, index) => index + 1,
-      sortable: false,
-      width: '5%',
-      center: true,
-    },
-    { 
-      name: 'Name', 
-      selector: row => row.names, 
-      sortable: true, 
-      center: true,
-      //width: '15%',
-    },
-    { 
-      name: 'User Name', 
-      selector: row => row.user_name, 
-      sortable: true, 
-      center: true,
-      //width: '15%',
-    },
-    { 
-      name: 'User Type', 
-      selector: row => row.user_type, 
-      sortable: true, 
-      center: true,
-      //width: '15%',
-    },
-    { 
-      name: 'Email', 
-      selector: row => row.email, 
-      sortable: true, 
-      center: true,
-      //width: '15%',
-    },
-    { 
-      name: 'Contact Number', 
-      selector: row => row.contact_no, 
-      sortable: true, 
-      center: true,
-      //width: '15%',
-    },
-    {
-      name: 'Actions',
-      cell: row => (
-        <div style={{ textAlign: 'center' }}>
-          <FontAwesomeIcon 
-            icon={faEdit} 
-            onClick={() => handleEdit(row.ids)} 
-            style={{ cursor: 'pointer', marginRight: '10px' }} 
-          />
-          <FontAwesomeIcon 
-            icon={faTrashAlt} 
-            onClick={() => handleDelete(row.ids)} 
-            style={{ cursor: 'pointer' }} 
-          />
-        </div>
-      ),
-      width: '20%',
-      //center: true,
-    },
-  ];
-
-  const customStyles = {
-    header: {
-      style: {
-        minHeight: '56px',
-        backgroundColor: '#f5f5f5',
-      },
-    },
-    headRow: {
-      style: {
-        backgroundColor: '#e9ecef',
-      },
-    },
-    rows: {
-      style: {
-        minHeight: '50px',
-      },
-      stripedStyle: {
-        backgroundColor: '#f2f2f2',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px',
-        paddingRight: '8px',
-      },
-    },
-  };
-
-  return (
-    <div className="card">
-      <div className="row">
-        <div className="col-md-9">
-          <h5 className="card-header text-md-start text-center">User List</h5>
-        </div>
-        <div className="col-md-3 pt-5" style={{ padding: '10px' }}>
-          <input
-            type="text"
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{ marginBottom: '30px', padding: '10px', width: '90%' }}
-          />
-        </div>
-      </div>
-      <div className="card-datatable text-nowrap">
-        <DataTable
-          columns={columns}
-          data={filteredData}
-          customStyles={customStyles}
-          progressPending={loading}
-          pagination
-          highlightOnHover
-          striped
-        />
-      </div>
-    </div>
-  );
-}
-
-export default UserDatatable;
-
-
-
-
-
-
-
-
-
-
-
+// export default UserList;
 
 
