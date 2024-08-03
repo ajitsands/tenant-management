@@ -43,7 +43,7 @@ const BuildingList = ({ reload }) => {
         { name: 'Contact', selector: row => row.manager_contact, sortable: true },
         // Add more columns as needed
     ];
-// Update by Stephy OK Fine Changhes Commited 
+// Update by Stephy OK Fine Changhes Commited Stephy Sands Lab 
     const customStylesOfTheTable = {
         header: {
             style: {
