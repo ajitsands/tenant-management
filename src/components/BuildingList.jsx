@@ -43,7 +43,7 @@ const BuildingList = ({ reload }) => {
         { name: 'Contact', selector: row => row.manager_contact, sortable: true },
         // Add more columns as needed
     ];
-
+// Update by Stephy OK Fine Changhes Commited 
     const customStylesOfTheTable = {
         header: {
             style: {
