@@ -40,7 +40,7 @@ const UserList = ({ reload }) => {
         { name: 'Email', selector: row => row.email, sortable: true },
         { name: 'Contact No', selector: row => row.contact_no, sortable: true },
     ];
-
+    // Sample Data
     const customStylesOfTheTable = {
         header: {
             style: {
