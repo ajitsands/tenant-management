@@ -41,7 +41,6 @@ const UserList = ({ reload }) => {
         { name: 'Contact No', selector: row => row.contact_no, sortable: true },
     ];
 
-    // Custom styles for the DataTable
     const customStylesOfTheTable = {
         header: {
             style: {
